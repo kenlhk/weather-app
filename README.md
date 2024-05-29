@@ -1,6 +1,34 @@
-# Welcome to Remix + Vite!
+# WEATHER APP
 
-📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/guides/vite) for details on supported features.
+A full-stack application built in Remix and MUI
+
+## Setup
+
+Get the Weather API key and put it as WEATHERAPI_KEY in the .env file.
+
+Run docker-compose:
+
+```sh
+docker compose up -d
+```
+
+Put the database URL as DATABASE_URL in the .env file.
+
+Generate Prisma client and database
+
+```sh
+npx prisma generate
+```
+
+```sh
+npx prisma db push
+```
+
+Seed the data
+
+```sh
+npx prisma db seed
+```
 
 ## Development
 
