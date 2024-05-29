@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { ActionFunction } from "@remix-run/node";
 import { Form, json, redirect, useActionData } from "@remix-run/react";
 import bcrypt from "bcryptjs";
+import { Layout } from "~/components/Layout";
 import { commitSession, getSession } from "~/utils/session";
 
 const prisma = new PrismaClient();
@@ -33,39 +34,68 @@ export default function LoginPage() {
   const actionData = useActionData<ActionFunction>();
 
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ mt: 8 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Login
-        </Typography>
-        <Form method="post">
-          <TextField
-            label="Username"
-            name="username"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            required
-          />
-          <TextField
-            label="Password"
-            name="password"
-            type="password"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            required
-          />
-          <Button type="submit" variant="contained" color="primary" fullWidth>
-            Login
-          </Button>
-        </Form>
-        {actionData?.error && (
-          <Typography color="error" variant="body1">
-            {actionData.error}
+    <Layout>
+      <Container
+        maxWidth="sm"
+        sx={{
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
+        <Box>
+          <Typography variant="h3" color="Highlight">
+            Welcome to Weather App
           </Typography>
-        )}
-      </Box>
-    </Container>
+        </Box>
+        <Box
+          sx={{
+            mt: 3,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            Login
+          </Typography>
+          <Form method="post">
+            <TextField
+              label="Username"
+              name="username"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              required
+            />
+            <TextField
+              label="Password"
+              name="password"
+              type="password"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              required
+            />
+            <Button
+              sx={{ mt: 2 }}
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
+              Login
+            </Button>
+          </Form>
+          {actionData?.error && (
+            <Typography color="error" variant="body1">
+              {actionData.error}
+            </Typography>
+          )}
+        </Box>
+      </Container>
+    </Layout>
   );
 }

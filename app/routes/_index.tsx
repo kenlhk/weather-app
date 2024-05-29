@@ -1,13 +1,13 @@
-import { Container } from "@mui/material";
-import { PrismaClient } from "@prisma/client";
+import { AppBar, Container, Grid, Toolbar, Typography } from "@mui/material";
 import { json, type LoaderFunction, type MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import { FavoriteList } from "~/components/FavoriteList";
-import { getFavoriteCities, getUser } from "~/data/repositoy/userRepository";
+import { Layout } from "~/components/Layout";
+import { NavBar } from "~/components/NavBar";
+import { WeatherBoard } from "~/components/WeatherBoard";
+import { getFavoriteCities, getUser } from "~/model/repo/userRepository";
 import { requireUserSession } from "~/utils/session";
-
-const prisma = new PrismaClient();
 
 export const meta: MetaFunction = () => {
   return [
@@ -32,7 +32,7 @@ export default function Index() {
   const [favoriteCities, setFavoriteCities] = useState(cities);
 
   const fetchFavoriteCities = async () => {
-    const favoriteCities = await fetch("/api/user/favorite").then((res) =>
+    const favoriteCities = await fetch("/api/user/favorites").then((res) =>
       res.json()
     );
     setFavoriteCities(favoriteCities);
@@ -40,12 +40,24 @@ export default function Index() {
   };
 
   return (
-    <Container>
-      <h1>{`Welcome ${user.username}`}</h1>
-      <FavoriteList
-        favoriteCities={favoriteCities}
-        fetchFavoriteCities={fetchFavoriteCities}
-      />
-    </Container>
+    <Layout>
+      <NavBar username={user.username} />
+      <Container
+        maxWidth={false}
+        sx={{ pt: 3, marginLeft: "auto", marginRight: "auto", height: "90vh"}}
+      >
+        <Grid container spacing={2} height="100%">
+          <Grid item xs={12} md={3} height="100%">
+            <FavoriteList
+              favoriteCities={favoriteCities}
+              fetchFavoriteCities={fetchFavoriteCities}
+            />
+          </Grid>
+          <Grid item xs={12} md={9}>
+            <WeatherBoard favoriteCities={favoriteCities} />
+          </Grid>
+        </Grid>
+      </Container>
+    </Layout>
   );
 }

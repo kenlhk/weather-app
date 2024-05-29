@@ -1,13 +1,15 @@
+import { Delete } from "@mui/icons-material";
 import {
+  Alert,
   Autocomplete,
   Box,
   Button,
-  Container,
   IconButton,
   List,
   ListItem,
   ListItemText,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { City } from "@prisma/client";
@@ -50,7 +52,7 @@ export function FavoriteList({
         .then((response) => response.json())
         .then((data) => {
           setOptions(data);
-        })
+        });
     }
 
     if (inputValue.length === 0) {
@@ -68,8 +70,20 @@ export function FavoriteList({
       body: JSON.stringify({ name, region, country, lat, lon, url }),
     }).then((response) => response.json());
 
-    await fetch("/api/favorites", {
+    await fetch("/api/user/favorites", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ cityId: city.id }),
+    });
+
+    fetchFavoriteCities();
+  };
+
+  const handleDeleteFavorite = async (city: City) => {
+    await fetch("/api/user/favorites", {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
@@ -85,19 +99,37 @@ export function FavoriteList({
       setInputValue("");
     }
   };
-  
+
   return (
-    <Container maxWidth="lg">
-      <Box sx={{ mt: 8 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        justifyContent: "space-between",
+      }}
+    >
+      <Box>
+        <Typography sx={{ my: 2 }} variant="h4">
           Favorite Cities
         </Typography>
-        <Box sx={{ display: "grid", alignItems: "center" }}>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            mb: 2,
+          }}
+        >
           <Autocomplete
             options={options}
-            getOptionLabel={(option) =>
-              `${option.name}, ${option.region}, ${option.country}`
-            }
+            getOptionLabel={(option) => {
+              const parts = [option.name, option.region, option.country];
+              const filteredParts = parts.filter((part) => part);
+              return filteredParts.join(", ");
+            }}
             isOptionEqualToValue={(option, value) => {
               return (
                 option.name === value.name &&
@@ -117,13 +149,14 @@ export function FavoriteList({
                 fullWidth
               />
             )}
+            fullWidth
           />
           <Button
             variant="contained"
             color="primary"
             onClick={handleAddButtonClick}
-            disabled={!selectedLocation}
-            sx={{ ml: 2 }}
+            disabled={favoriteCities.length >= 5}
+            sx={{ width: "100%", mb: 2 }}
           >
             Add
           </Button>
@@ -133,20 +166,29 @@ export function FavoriteList({
             <ListItem
               key={city.id}
               secondaryAction={
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                    onClick={() => handleDeleteCity(city)}
-                >
-                  {/* <DeleteIcon /> */}
-                </IconButton>
+                <Tooltip title="Delete" placement="right">
+                  <IconButton onClick={() => handleDeleteFavorite(city)}>
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
               }
             >
-              <ListItemText primary={`${city.name}`} />
+              <ListItemText
+                primary={
+                  city.region
+                    ? `${city.name}, ${city.region}, ${city.country}`
+                    : `${city.name}, ${city.country}`
+                }
+              />
             </ListItem>
           ))}
         </List>
       </Box>
-    </Container>
+      <Box>
+        <Alert severity="info" variant="outlined" sx={{ mt: 2 }}>
+          Maximun of 5 favorite cities allowed
+        </Alert>
+      </Box>
+    </Box>
   );
 }
