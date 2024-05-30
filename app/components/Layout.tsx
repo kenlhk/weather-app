@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@emotion/react";
-import { createTheme, CssBaseline } from "@mui/material";
+import { Box, createTheme, CssBaseline } from "@mui/material";
 
 const darkTheme = createTheme({
   palette: {
@@ -9,9 +9,11 @@ const darkTheme = createTheme({
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      {children}
-    </ThemeProvider>
+    <Box sx={{overscrollBehavior:"none"}}>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
+    </Box>
   );
 }

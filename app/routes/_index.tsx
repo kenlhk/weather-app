@@ -42,10 +42,7 @@ export default function Index() {
   return (
     <Layout>
       <NavBar username={user.username} />
-      <Container
-        maxWidth={false}
-        sx={{ pt: 3, marginLeft: "auto", marginRight: "auto", height: "90vh"}}
-      >
+      <Container maxWidth={false} sx={{ height: "90vh" }}>
         <Grid container spacing={2} height="100%">
           <Grid item xs={12} md={3} height="100%">
             <FavoriteList

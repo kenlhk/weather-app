@@ -97,9 +97,9 @@ export function FavoriteList({
     if (selectedLocation) {
       handleAddFavorite(selectedLocation);
       setInputValue("");
+      setSelectedLocation(null);
     }
   };
-
   return (
     <Box
       sx={{
@@ -184,11 +184,13 @@ export function FavoriteList({
           ))}
         </List>
       </Box>
-      <Box>
-        <Alert severity="info" variant="outlined" sx={{ mt: 2 }}>
-          Maximum of 5 favorite cities allowed
-        </Alert>
-      </Box>
+      {favoriteCities.length >= 5 && (
+        <Box>
+          <Alert severity="info" variant="outlined" sx={{ mt: 2 }}>
+            Maximum of 5 favorite cities allowed
+          </Alert>
+        </Box>
+      )}
     </Box>
   );
 }

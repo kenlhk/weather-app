@@ -20,10 +20,10 @@ export function WeatherCard({ weather }: WeatherCardProps) {
         flexDirection: "column",
         justifyContent: "space-around",
         alignItems: "flex-start",
-        width: 320,
+        width: 340,
         height: 400,
         m: 2,
-        p: 2,
+        px: 1,
         boxShadow: 3,
         borderRadius: 5,
       }}

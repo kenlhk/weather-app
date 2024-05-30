@@ -1,4 +1,4 @@
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import { City } from "@prisma/client";
 import { useLoaderData } from "@remix-run/react";
 import { useEffect, useState } from "react";
@@ -50,6 +50,11 @@ export function WeatherBoard({ favoriteCities }: WeatherBoardProps) {
 
   return (
     <Container>
+      {favoriteCities.length === 0 && (
+        <Typography variant="h6" sx={{ m: 2 }}>
+          Please add your favourite cities.
+        </Typography>
+      )}
       <Grid container>
         {weathers.map((weather) => (
           <Grid
