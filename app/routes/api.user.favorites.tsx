@@ -1,9 +1,11 @@
-import { PrismaClient } from "@prisma/client";
 import { ActionFunction, LoaderFunction, json } from "@remix-run/node";
+import {
+  createFavorite,
+  deleteFavorite,
+  getFavoriteByUserIdAndCityId,
+} from "~/model/repo/favoriteRepository";
 import { getFavoriteCities } from "~/model/repo/userRepository";
 import { getSession } from "~/utils/session";
-
-const prisma = new PrismaClient();
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request);
@@ -20,31 +22,30 @@ export const action: ActionFunction = async ({ request }) => {
 
   switch (request.method) {
     case "POST": {
-      const existingFavorite = await prisma.favorite.findFirst({
-        where: { userId: parseInt(userId), cityId: parseInt(cityId) },
-      });
+      const existingFavorite = await getFavoriteByUserIdAndCityId(
+        parseInt(userId),
+        parseInt(cityId)
+      );
 
       if (existingFavorite) {
         return json(existingFavorite);
       }
 
-      const newFavorite = await prisma.favorite.create({
-        data: {
-          userId: parseInt(userId),
-          cityId: parseInt(cityId),
-        },
-      });
-
+      const newFavorite = await createFavorite(
+        parseInt(userId),
+        parseInt(cityId)
+      );
       return json(newFavorite);
     }
 
     case "DELETE": {
-      const favorite = await prisma.favorite.findFirst({
-        where: { userId: parseInt(userId), cityId: parseInt(cityId) },
-      });
+      const favorite = await getFavoriteByUserIdAndCityId(
+        parseInt(userId),
+        parseInt(cityId)
+      );
 
       if (favorite) {
-        await prisma.favorite.delete({ where: { id: favorite.id } });
+        await deleteFavorite(favorite.id);
       }
 
       return json({ message: "Favorite deleted" });

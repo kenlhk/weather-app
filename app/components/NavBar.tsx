@@ -2,13 +2,10 @@ import {
   AppBar,
   Box,
   Button,
-  Icon,
-  IconButton,
   Toolbar,
-  Typography,
+  Typography
 } from "@mui/material";
 import { Form } from "@remix-run/react";
-import LogoutIcon from "@mui/icons-material/Logout";
 
 interface NavBarProps {
   username: string;

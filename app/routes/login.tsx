@@ -1,21 +1,17 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import { PrismaClient } from "@prisma/client";
 import { ActionFunction } from "@remix-run/node";
 import { Form, json, redirect, useActionData } from "@remix-run/react";
 import bcrypt from "bcryptjs";
 import { Layout } from "~/components/Layout";
+import { getUserByUsername } from "~/model/repo/userRepository";
 import { commitSession, getSession } from "~/utils/session";
-
-const prisma = new PrismaClient();
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const username = formData.get("username") as string;
   const password = formData.get("password") as string;
 
-  const user = await prisma.user.findUnique({
-    where: { username },
-  });
+  const user = await getUserByUsername(username);
 
   if (user && (await bcrypt.compare(password, user.password))) {
     const session = await getSession(request);

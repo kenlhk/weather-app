@@ -10,6 +10,14 @@ export const getUser = async (userId: string) => {
   return user;
 };
 
+export const getUserByUsername = async (username: string) => {
+  const user = await prisma.user.findUnique({
+    where: { username },
+  });
+
+  return user;
+};
+
 export const getFavoriteCities = async (userId: string) => {
   const favourites = await prisma.favorite.findMany({
     where: { userId: parseInt(userId) },

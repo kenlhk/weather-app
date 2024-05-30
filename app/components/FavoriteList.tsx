@@ -186,7 +186,7 @@ export function FavoriteList({
       </Box>
       <Box>
         <Alert severity="info" variant="outlined" sx={{ mt: 2 }}>
-          Maximun of 5 favorite cities allowed
+          Maximum of 5 favorite cities allowed
         </Alert>
       </Box>
     </Box>
